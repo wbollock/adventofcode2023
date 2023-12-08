@@ -5,7 +5,7 @@ import (
 )
 
 func TestMainFunction(t *testing.T) {
-	expected := 288
+	expected := 71503
 
 	input := readInput("testinput")
 	races := parseInput(input)

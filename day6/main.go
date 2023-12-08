@@ -53,32 +53,46 @@ func parseInput(input []byte) (races Race) {
 
 
 	times := strings.Split(sanitizedTime, " ")
+	var miniTimes []string
 	for _, time := range times {
 		if time != "" {
-			timeInt, err := strconv.Atoi(time)
-			if err != nil {
-				slog.Error("Error converting string", err)
-			}
-			races.raceTimes = append(races.raceTimes, timeInt)
+			miniTimes = append(miniTimes, time)
 		}
-
 	}
+
+	var singleTime string
+	for _, str := range miniTimes {
+		singleTime+= str
+	}
+	timeInt, err := strconv.Atoi(singleTime)
+	if err != nil {
+		slog.Error("Error converting string", err)
+	}
+
+	races.raceTimes = append(races.raceTimes, timeInt)
 
 	distRegex := regexp.MustCompile(`Distance: `)
 	sanitizedDist := distRegex.ReplaceAllString(lines[1], "")
 
 	distances := strings.Split(sanitizedDist, " ")
+	var miniDist []string
 	for _, dist := range distances {
 		if dist != ""{
-			timeInt, err := strconv.Atoi(dist)
-			if err != nil {
-				slog.Error("Error converting string", err)
-			}
-			races.raceDistances = append(races.raceDistances, timeInt)
+			miniDist = append(miniDist, dist)
+
 		}
 
 	}
 	
+	var singleDist string
+	for _, str := range miniDist {
+		singleDist+= str
+	}
+	distInt, err := strconv.Atoi(singleDist)
+	if err != nil {
+		slog.Error("Error converting string", err)
+	}
+	races.raceDistances = append(races.raceDistances, distInt)
 	return races
 }
 
@@ -96,7 +110,7 @@ func calculatePoints(races Race) (points int) {
 			totalDistance := j * (time - j)
 			// slog.Info("Race Distance", "race", i, "distance", totalDistance)
 			if totalDistance > races.raceDistances[i] {
-				slog.Info("Winning race", "race", i, "distance", totalDistance)
+				// slog.Info("Winning race", "race", i, "distance", totalDistance)
 				raceCombinations++
 			}
 		}
@@ -104,11 +118,11 @@ func calculatePoints(races Race) (points int) {
 	}
 
 	points = 1
-	for _, combo := range totalRaceCombinations {
-		slog.Info("Combo", "combo", combo)
-		points *= combo
-	}
+	// for _, combo := range totalRaceCombinations {
+	// 	slog.Info("Combo", "combo", combo)
+	// 	points *= combo
+	// }
 
-	return points
+	return totalRaceCombinations[0]
 }
 
